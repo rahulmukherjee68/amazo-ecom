@@ -80,3 +80,22 @@ module.exports.profile = async (req, res) => {
     });
   }
 };
+
+module.exports.addCart = async (req, res) => {
+  let user = await User.findById(req.body.id);
+  if (user) {
+    let arr = user.Carts
+    arr.push(req.body.prod_id);
+    let doc = await User.findByIdAndUpdate({ _id: req.body.id }, { Carts: arr }).exec();
+    if (doc) {
+      res.status(200).json({ message: "successfully added to cart! with prod_id:- " + req.body.prod_id, error: false, data: doc });
+    }
+    else {
+      res.status(400).json({
+        message: "No User found",
+        error: true,
+        data: null,
+      });
+    }
+  }
+};
